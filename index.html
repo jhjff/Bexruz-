@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartHire AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">SH</div><div><b>SmartHire AI</b><span>Hiring workspace</span></div></div>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#dashboard" data-view="dashboard">Dashboard</a>
+      <a href="#jobs" data-view="jobs">Jobs <span class="badge" id="nav-jobs">0</span></a>
+      <a href="#candidates" data-view="candidates">Candidates <span class="badge" id="nav-cands">0</span></a>
+      <a href="#matching" data-view="matching">Matching</a>
+      <a href="#insights" data-view="insights">Insights</a>
+      <a href="#pipeline" data-view="pipeline">Hiring Pipeline</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" data-title="Dashboard" hidden>
+      <div class="page-head"><h1>Dashboard</h1><p>Job totals, candidate totals, and how many people are in each stage.</p></div>
+      <div class="note">Fictional recruiting prototype stored in this browser. The skill percentage is arithmetic you can recheck. The AI explanation is a <b>demo prototype</b> built on rules and templates. A person makes every hiring decision.</div>
+      <div class="stats">
+        <div class="stat"><span>Jobs</span><strong id="d-jobs">0</strong></div>
+        <div class="stat"><span>Candidates</span><strong id="d-cands">0</strong></div>
+      </div>
+      <h2 class="section-title">Candidates at each stage</h2>
+      <p class="hint">Open the pipeline from any stage. Counts come from saved candidate statuses.</p>
+      <div class="stages" id="d-stages"></div>
+      <div class="grid2">
+        <div class="panel"><h2>Latest jobs</h2><div class="mini-list" id="d-latest-jobs"></div></div>
+        <div class="panel"><h2>Latest candidates</h2><div class="mini-list" id="d-latest-cands"></div></div>
+      </div>
+    </section>
+
+    <!-- JOBS -->
+    <section id="view-jobs" data-title="Jobs" hidden>
+      <div class="page-head"><h1>Jobs</h1><p>Create openings and list the skills each one requires.</p></div>
+      <div class="page-grid">
+        <form class="panel" id="job-form" novalidate>
+          <h2 id="job-form-title">Add a job</h2>
+          <p class="hint">Separate required skills with commas.</p>
+          <label><span>Job title</span><input id="job-title" maxlength="80" placeholder="Backend Engineer" autocomplete="off"></label>
+          <div class="row2">
+            <label><span>Department</span><input id="job-dept" maxlength="60" placeholder="Engineering" autocomplete="off"></label>
+            <label><span>Level</span><select id="job-level"><option>Junior</option><option>Mid-level</option><option selected>Senior</option><option>Lead</option></select></label>
+          </div>
+          <label><span>Required skills</span><input id="job-skills" placeholder="Python, SQL, Docker, REST APIs" autocomplete="off"></label>
+          <label><span>Description (optional)</span><textarea id="job-desc" maxlength="400" placeholder="What the role does day to day."></textarea></label>
+          <p class="form-error" id="job-error" role="alert"></p>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="job-submit">Save job</button>
+            <button type="button" class="btn" id="job-cancel" hidden>Cancel</button>
+          </div>
+        </form>
+        <div>
+          <div class="toolbar">
+            <input id="job-search" type="search" placeholder="Search title, department, or skill" aria-label="Search jobs">
+            <select id="job-level-filter" aria-label="Filter by level"><option value="">All levels</option><option>Junior</option><option>Mid-level</option><option>Senior</option><option>Lead</option></select>
+            <p class="count" id="job-count"></p>
+          </div>
+          <div class="stack" id="job-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CANDIDATES -->
+    <section id="view-candidates" data-title="Candidates" hidden>
+      <div class="page-head"><h1>Candidates</h1><p>Add invented profiles and keep a résumé summary for the skill check.</p></div>
+      <div class="page-grid">
+        <form class="panel" id="cand-form" novalidate>
+          <h2 id="cand-form-title">Add a candidate</h2>
+          <p class="hint">Use invented profiles. Leave out phone numbers, email addresses, and real work history.</p>
+          <label><span>Candidate name</span><input id="cand-name" maxlength="80" placeholder="Alex Rivera" autocomplete="off"></label>
+          <div class="row2">
+            <label><span>Experience (years)</span><input id="cand-exp" type="number" min="0" max="60" step="1" inputmode="numeric" placeholder="3"></label>
+            <label><span>Stage</span><select id="cand-stage"></select></label>
+          </div>
+          <label><span>Applied for</span><select id="cand-job"></select></label>
+          <label><span>Skills the candidate lists</span><input id="cand-skills" placeholder="SQL, Python, Tableau" autocomplete="off"></label>
+          <label><span>Résumé summary</span><textarea id="cand-resume" maxlength="800" placeholder="Short invented summary. Skills named here count as confirmed by the résumé."></textarea></label>
+          <p class="form-error" id="cand-error" role="alert"></p>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="cand-submit">Save candidate</button>
+            <button type="button" class="btn" id="cand-cancel" hidden>Cancel</button>
+          </div>
+        </form>
+        <div>
+          <div class="toolbar">
+            <input id="cand-search" type="search" placeholder="Search name, skill, or résumé text" aria-label="Search candidates">
+            <select id="cand-stage-filter" aria-label="Filter by stage"></select>
+            <select id="cand-job-filter" aria-label="Filter by job"></select>
+            <p class="count" id="cand-count"></p>
+          </div>
+          <div class="stack" id="cand-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHING -->
+    <section id="view-matching" data-title="Matching" hidden>
+      <div class="page-head"><h1>Matching</h1><p>Compare a job's required skills with a candidate's skills and résumé.</p></div>
+      <div class="note"><span class="demo-tag">Demo prototype</span> This is not a connected AI model. The explanation and questions come from rules and templates applied to your data, so every number can be rechecked by hand.</div>
+      <div class="page-grid">
+        <div class="panel">
+          <h2>Choose a pair</h2>
+          <label style="margin-top:10px"><span>Job</span><select id="match-job"></select></label>
+          <label><span>Candidate</span><select id="match-cand"></select></label>
+          <p class="form-error" id="match-error" role="alert"></p>
+          <button type="button" class="btn btn-primary" id="match-run">Compare skills</button>
+        </div>
+        <div class="panel result" id="match-result"><div class="empty">Pick a job and a candidate, then press Compare skills.</div></div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section id="view-insights" data-title="Insights" hidden>
+      <div class="page-head"><h1>Insights</h1><p>Where skill demand and candidate supply line up, and where they do not.</p></div>
+      <div class="grid2">
+        <div class="panel"><h2>Skills jobs ask for</h2><p class="hint">Number of jobs that require each skill.</p><div class="bars" id="ins-demand"></div></div>
+        <div class="panel"><h2>Skills candidates list</h2><p class="hint">Number of candidates who list each skill.</p><div class="bars" id="ins-supply"></div></div>
+      </div>
+      <div class="grid2" style="margin-top:16px">
+        <div class="panel"><h2>Best match per job</h2><p class="hint">Highest skill percentage among all candidates.</p><div class="scroll-x"><table id="ins-best"></table></div></div>
+        <div class="panel"><h2>Pipeline facts</h2><div class="mini-list" id="ins-facts"></div></div>
+      </div>
+    </section>
+
+    <!-- PIPELINE -->
+    <section id="view-pipeline" data-title="Hiring Pipeline" hidden>
+      <div class="page-head"><h1>Hiring Pipeline</h1><p>Move candidates between stages. Changes are saved immediately.</p></div>
+      <div class="toolbar"><select id="pipe-job-filter" aria-label="Filter pipeline by job"></select><p class="count" id="pipe-count"></p></div>
+      <div class="board" id="board"></div>
+    </section>
+  </main>
+  <footer class="foot"><p>Saved in this browser only. Sample people are fictional. Do not enter real résumés.</p><button type="button" class="btn-side" id="reset-data">Restore sample data</button></footer>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="script.js"></script>
+</body>
+</html>
